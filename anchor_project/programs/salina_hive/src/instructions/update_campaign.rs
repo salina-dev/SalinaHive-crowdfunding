@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::errors::SalinaError;
+use crate::errors::ErrorCode;
 use crate::state::Campaign;
 use crate::constants::{TITLE_MAX_LEN, DESC_MAX_LEN, URL_MAX_LEN};
 
@@ -10,13 +10,13 @@ pub struct UpdateCampaign<'info> {
     pub campaign: Account<'info, Campaign>,
 }
 
-pub fn handler(ctx: Context<UpdateCampaign>, title: String, description: String, image_url: String) -> Result<()> {
-    require!(title.as_bytes().len() <= TITLE_MAX_LEN, SalinaError::TitleTooLong);
-    require!(description.as_bytes().len() <= DESC_MAX_LEN, SalinaError::DescriptionTooLong);
-    require!(image_url.as_bytes().len() <= URL_MAX_LEN, SalinaError::UrlTooLong);
+pub fn update_campaign_handler(ctx: Context<UpdateCampaign>, title: String, description: String, image_url: String) -> Result<()> {
+    require!(title.as_bytes().len() <= TITLE_MAX_LEN, ErrorCode::TitleTooLong);
+    require!(description.as_bytes().len() <= DESC_MAX_LEN, ErrorCode::DescriptionTooLong);
+    require!(image_url.as_bytes().len() <= URL_MAX_LEN, ErrorCode::UrlTooLong);
 
     let campaign = &mut ctx.accounts.campaign;
-    require!(!campaign.is_deleted, SalinaError::CampaignDeleted);
+    require!(!campaign.is_deleted, ErrorCode::CampaignDeleted);
 
     campaign.title = title;
     campaign.description = description;

@@ -20,7 +20,7 @@ export default function HiveCreatePage() {
     try {
       const ts = Math.floor(new Date(deadline).getTime() / 1000)
       const lamports = Math.round(goal * 1_000_000_000)
-      await createCampaign({ title, description, goalLamports: lamports, deadlineTs: ts, imageUrl })
+      const pda = await createCampaign({ title, description, goalLamports: lamports, deadlineTs: ts, imageUrl })
       router.push('/hive')
     } finally {
       setBusy(false)

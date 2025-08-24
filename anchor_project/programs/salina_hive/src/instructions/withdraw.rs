@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::errors::SalinaError;
+use crate::errors::ErrorCode;
 use crate::state::Campaign;
 
 #[derive(Accounts)]
@@ -11,14 +11,14 @@ pub struct Withdraw<'info> {
     pub campaign: Account<'info, Campaign>,
 }
 
-pub fn handler(ctx: Context<Withdraw>) -> Result<()> {
+pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let clock = Clock::get()?;
     let campaign = &mut ctx.accounts.campaign;
 
     // allow withdraw if goal reached or deadline passed
     let can_withdraw = campaign.raised_lamports >= campaign.goal_lamports
         || clock.unix_timestamp >= campaign.deadline_ts;
-    require!(can_withdraw, SalinaError::WithdrawNotAllowed);
+    require!(can_withdraw, ErrorCode::WithdrawNotAllowed);
 
     // compute withdrawable lamports (all lamports minus rent for this account)
     let rent = Rent::get()?;

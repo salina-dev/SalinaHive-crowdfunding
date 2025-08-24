@@ -4,42 +4,15 @@ import { BN, Program, Idl } from "@coral-xyz/anchor";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import idl from "@/idl/salina_hive.json";
 import { useAnchorProvider } from "@/components/solana/solana-provider";
-import type { SalinaHive } from "@/idl/salina_hive";
-import { useMemo } from "react";
 
 export const SALINA_HIVE_PROGRAM_ID = new PublicKey("Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP");
 const enc = new TextEncoder();
 
-export type PlatformAccount = {
-  authority: PublicKey;
-  feeBps: number;
-  treasury: PublicKey;
-  campaignCount: BN;
-  bump: number;
-};
-
-export type CampaignAccount = {
-  platform: PublicKey;
-  creator: PublicKey;
-  cid: BN;
-  title: string;
-  description: string;
-  imageUrl: string;
-  goalLamports: BN;
-  raisedLamports: BN;
-  deadlineTs: BN;
-  donationCount: BN;
-  isDeleted: boolean;
-  bump: number;
-};
-
 export function useSalinaHive() {
   const provider = useAnchorProvider();
-
-  const program = useMemo(() => new Program(idl as Idl, provider) as Program<SalinaHive>, [provider]);
-
+  const getProgram = () => new Program(idl as Idl, provider) as Program<any>;
   const requireWallet = (): PublicKey => {
-    const pk = provider.wallet?.publicKey as PublicKey | undefined;
+    const pk = (provider.wallet as any)?.publicKey as PublicKey | undefined;
     if (!pk) throw new Error("Connect your wallet first");
     return pk;
   };
@@ -54,107 +27,84 @@ export function useSalinaHive() {
     return PublicKey.findProgramAddressSync([enc.encode("campaign"), le], SALINA_HIVE_PROGRAM_ID);
   };
 
-  async function initializePlatform(feeBps: number): Promise<void> {
-    const payer = requireWallet();
-    const sig = await program.methods
-      .initializePlatform(feeBps, 0)
-      .accounts({ payer })
-      .rpc();
-    await provider.connection.confirmTransaction(sig, "confirmed");
-  }
-
-  async function createCampaign(input: { title: string; description: string; goalLamports: number; deadlineTs: number; imageUrl: string }): Promise<PublicKey> {
+  async function initializePlatform(feeBps: number) {
+    const program = getProgram();
     const payer = requireWallet();
     const [platformPda] = findPlatformPda();
-    const platform = (await program.account.platform.fetch(platformPda)) as unknown as PlatformAccount;
+    const sig = await (program.methods as any)
+      .initializePlatform(feeBps, 0)
+      .accounts({ payer, platform: platformPda, systemProgram: SystemProgram.programId })
+      .rpc();
+    await provider.connection.confirmTransaction(sig, 'confirmed')
+  }
+
+  async function createCampaign(input: { title: string; description: string; goalLamports: number; deadlineTs: number; imageUrl: string }) {
+    const program = getProgram();
+    const payer = requireWallet();
+    const [platformPda] = findPlatformPda();
+    const platform = await (program.account as any).platform.fetch(platformPda);
     const nextId = Number(platform.campaignCount) + 1;
     const [campaignPda] = findCampaignPdaById(nextId);
 
-    const sig = await program.methods
+    const sig = await (program.methods as any)
       .createCampaign(input.title, input.description, new BN(input.goalLamports), new BN(input.deadlineTs), input.imageUrl)
-      .accounts({ payer, campaign: campaignPda })
+      .accounts({ payer, platform: platformPda, campaign: campaignPda, systemProgram: SystemProgram.programId })
       .rpc();
-    await provider.connection.confirmTransaction(sig, "confirmed");
+    await provider.connection.confirmTransaction(sig, 'confirmed')
 
     return campaignPda;
   }
 
-  async function donate(campaign: PublicKey, amountLamports: number): Promise<void> {
-    requireWallet();
+  async function donate(campaign: PublicKey, amountLamports: number) {
+    const program = getProgram();
+    const donor = requireWallet();
     const [platformPda] = findPlatformPda();
-    const sig = await program.methods
+    const sig = await (program.methods as any)
       .donate(new BN(amountLamports))
-      .accounts({ campaign, treasury: platformPda })
+      .accounts({ donor, platform: platformPda, campaign, treasury: platformPda, systemProgram: SystemProgram.programId })
       .rpc();
-    await provider.connection.confirmTransaction(sig, "confirmed");
+    await provider.connection.confirmTransaction(sig, 'confirmed')
   }
 
-  async function withdraw(campaign: PublicKey): Promise<void> {
-    requireWallet();
-    const sig = await program.methods
+  async function withdraw(campaign: PublicKey) {
+    const program = getProgram();
+    const creator = requireWallet();
+    const sig = await (program.methods as any)
       .withdraw()
-      .accounts({ campaign })
+      .accounts({ creator, campaign })
       .rpc();
-    await provider.connection.confirmTransaction(sig, "confirmed");
+    await provider.connection.confirmTransaction(sig, 'confirmed')
   }
 
-  async function fetchCampaign(campaign: PublicKey): Promise<CampaignAccount> {
-    const data = await program.account.campaign.fetch(campaign);
-    return data as unknown as CampaignAccount;
+  async function fetchCampaign(campaign: PublicKey) {
+    const program = getProgram();
+    return (program.account as any).campaign.fetch(campaign);
   }
 
-  async function fetchPlatform(): Promise<PlatformAccount | null> {
+  async function fetchPlatform() {
+    const program = getProgram();
     const [platformPda] = findPlatformPda();
     try {
-      const data = await program.account.platform.fetch(platformPda);
-      return data as unknown as PlatformAccount;
+      return await (program.account as any).platform.fetch(platformPda);
     } catch {
       return null;
     }
   }
 
-  function chunkArray<T>(items: T[], chunkSize: number): T[][] {
-    const chunks: T[][] = [];
-    for (let i = 0; i < items.length; i += chunkSize) {
-      chunks.push(items.slice(i, i + chunkSize));
+  async function fetchCampaigns() {
+    const platform = await fetchPlatform();
+    if (!platform) return [] as any[];
+    const program = getProgram();
+    const items: any[] = [];
+    for (let i = 1; i <= Number(platform.campaignCount); i++) {
+      const [pda] = findCampaignPdaById(i);
+      try {
+        const c = await (program.account as any).campaign.fetch(pda);
+        items.push({ pda, data: c });
+      } catch {}
     }
-    return chunks;
+    return items;
   }
 
-  async function fetchCampaigns(existingPlatform?: PlatformAccount): Promise<{ pda: PublicKey; data: CampaignAccount }[]> {
-    const platform = existingPlatform ?? (await fetchPlatform());
-    if (!platform) return [];
-
-    const count = Number(platform.campaignCount);
-    if (count <= 0) return [];
-
-    const ids: number[] = Array.from({ length: count }, (_, i) => i + 1);
-    const pdas: PublicKey[] = ids.map((id) => findCampaignPdaById(id)[0]);
-
-    // Batch requests to reduce RPC load - smaller chunks to avoid 429s
-    const results: { pda: PublicKey; data: CampaignAccount }[] = [];
-    const CHUNK_SIZE = 10; // Reduced from 50 to minimize rate limit issues
-    for (const batch of chunkArray(pdas, CHUNK_SIZE)) {
-      // Add a small delay between batches to be more rate-limit friendly
-      if (results.length > 0) {
-        await new Promise(resolve => setTimeout(resolve, 200));
-      }
-      
-      const infos = await provider.connection.getMultipleAccountsInfo(batch, { commitment: "confirmed" });
-      for (let i = 0; i < batch.length; i++) {
-        const info = infos[i];
-        if (!info?.data) continue;
-        try {
-          const decoded = program.coder.accounts.decode("campaign", info.data) as unknown as CampaignAccount;
-          results.push({ pda: batch[i], data: decoded });
-        } catch {
-          // Skip undecodable entries (e.g., missing or wrong account)
-        }
-      }
-    }
-
-    return results;
-  }
-
-  return { program, findPlatformPda, findCampaignPdaById, initializePlatform, createCampaign, donate, withdraw, fetchCampaign, fetchPlatform, fetchCampaigns };
+  return { getProgram, findPlatformPda, findCampaignPdaById, initializePlatform, createCampaign, donate, withdraw, fetchCampaign, fetchPlatform, fetchCampaigns };
 } 
