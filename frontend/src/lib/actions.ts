@@ -4,15 +4,42 @@ import { BN, Program, Idl } from "@coral-xyz/anchor";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import idl from "@/idl/salina_hive.json";
 import { useAnchorProvider } from "@/components/solana/solana-provider";
+import type { SalinaHive } from "@/idl/salina_hive";
+import { useMemo } from "react";
 
 export const SALINA_HIVE_PROGRAM_ID = new PublicKey("Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP");
 const enc = new TextEncoder();
 
+export type PlatformAccount = {
+  authority: PublicKey;
+  feeBps: number;
+  treasury: PublicKey;
+  campaignCount: BN;
+  bump: number;
+};
+
+export type CampaignAccount = {
+  platform: PublicKey;
+  creator: PublicKey;
+  cid: BN;
+  title: string;
+  description: string;
+  imageUrl: string;
+  goalLamports: BN;
+  raisedLamports: BN;
+  deadlineTs: BN;
+  donationCount: BN;
+  isDeleted: boolean;
+  bump: number;
+};
+
 export function useSalinaHive() {
   const provider = useAnchorProvider();
-  const getProgram = () => new Program(idl as Idl, provider) as Program<any>;
+
+  const program = useMemo(() => new Program(idl as Idl, provider) as Program<SalinaHive>, [provider]);
+
   const requireWallet = (): PublicKey => {
-    const pk = (provider.wallet as any)?.publicKey as PublicKey | undefined;
+    const pk = provider.wallet?.publicKey as PublicKey | undefined;
     if (!pk) throw new Error("Connect your wallet first");
     return pk;
   };
@@ -27,84 +54,78 @@ export function useSalinaHive() {
     return PublicKey.findProgramAddressSync([enc.encode("campaign"), le], SALINA_HIVE_PROGRAM_ID);
   };
 
-  async function initializePlatform(feeBps: number) {
-    const program = getProgram();
+  async function initializePlatform(feeBps: number): Promise<void> {
     const payer = requireWallet();
-    const [platformPda] = findPlatformPda();
-    const sig = await (program.methods as any)
+    const sig = await program.methods
       .initializePlatform(feeBps, 0)
-      .accounts({ payer, platform: platformPda, systemProgram: SystemProgram.programId })
+      .accounts({ payer })
       .rpc();
-    await provider.connection.confirmTransaction(sig, 'confirmed')
+    await provider.connection.confirmTransaction(sig, "confirmed");
   }
 
-  async function createCampaign(input: { title: string; description: string; goalLamports: number; deadlineTs: number; imageUrl: string }) {
-    const program = getProgram();
+  async function createCampaign(input: { title: string; description: string; goalLamports: number; deadlineTs: number; imageUrl: string }): Promise<PublicKey> {
     const payer = requireWallet();
     const [platformPda] = findPlatformPda();
-    const platform = await (program.account as any).platform.fetch(platformPda);
+    const platform = (await program.account.platform.fetch(platformPda)) as unknown as PlatformAccount;
     const nextId = Number(platform.campaignCount) + 1;
     const [campaignPda] = findCampaignPdaById(nextId);
 
-    const sig = await (program.methods as any)
+    const sig = await program.methods
       .createCampaign(input.title, input.description, new BN(input.goalLamports), new BN(input.deadlineTs), input.imageUrl)
-      .accounts({ payer, platform: platformPda, campaign: campaignPda, systemProgram: SystemProgram.programId })
+      .accounts({ payer, campaign: campaignPda })
       .rpc();
-    await provider.connection.confirmTransaction(sig, 'confirmed')
+    await provider.connection.confirmTransaction(sig, "confirmed");
 
     return campaignPda;
   }
 
-  async function donate(campaign: PublicKey, amountLamports: number) {
-    const program = getProgram();
-    const donor = requireWallet();
+  async function donate(campaign: PublicKey, amountLamports: number): Promise<void> {
+    requireWallet();
     const [platformPda] = findPlatformPda();
-    const sig = await (program.methods as any)
+    const sig = await program.methods
       .donate(new BN(amountLamports))
-      .accounts({ donor, platform: platformPda, campaign, treasury: platformPda, systemProgram: SystemProgram.programId })
+      .accounts({ campaign, treasury: platformPda })
       .rpc();
-    await provider.connection.confirmTransaction(sig, 'confirmed')
+    await provider.connection.confirmTransaction(sig, "confirmed");
   }
 
-  async function withdraw(campaign: PublicKey) {
-    const program = getProgram();
-    const creator = requireWallet();
-    const sig = await (program.methods as any)
+  async function withdraw(campaign: PublicKey): Promise<void> {
+    requireWallet();
+    const sig = await program.methods
       .withdraw()
-      .accounts({ creator, campaign })
+      .accounts({ campaign })
       .rpc();
-    await provider.connection.confirmTransaction(sig, 'confirmed')
+    await provider.connection.confirmTransaction(sig, "confirmed");
   }
 
-  async function fetchCampaign(campaign: PublicKey) {
-    const program = getProgram();
-    return (program.account as any).campaign.fetch(campaign);
+  async function fetchCampaign(campaign: PublicKey): Promise<CampaignAccount> {
+    const data = await program.account.campaign.fetch(campaign);
+    return data as unknown as CampaignAccount;
   }
 
-  async function fetchPlatform() {
-    const program = getProgram();
+  async function fetchPlatform(): Promise<PlatformAccount | null> {
     const [platformPda] = findPlatformPda();
     try {
-      return await (program.account as any).platform.fetch(platformPda);
+      const data = await program.account.platform.fetch(platformPda);
+      return data as unknown as PlatformAccount;
     } catch {
       return null;
     }
   }
 
-  async function fetchCampaigns() {
+  async function fetchCampaigns(): Promise<{ pda: PublicKey; data: CampaignAccount }[]> {
     const platform = await fetchPlatform();
-    if (!platform) return [] as any[];
-    const program = getProgram();
-    const items: any[] = [];
+    if (!platform) return [];
+    const items: { pda: PublicKey; data: CampaignAccount }[] = [];
     for (let i = 1; i <= Number(platform.campaignCount); i++) {
       const [pda] = findCampaignPdaById(i);
       try {
-        const c = await (program.account as any).campaign.fetch(pda);
+        const c = (await program.account.campaign.fetch(pda)) as unknown as CampaignAccount;
         items.push({ pda, data: c });
       } catch {}
     }
     return items;
   }
 
-  return { getProgram, findPlatformPda, findCampaignPdaById, initializePlatform, createCampaign, donate, withdraw, fetchCampaign, fetchPlatform, fetchCampaigns };
+  return { program, findPlatformPda, findCampaignPdaById, initializePlatform, createCampaign, donate, withdraw, fetchCampaign, fetchPlatform, fetchCampaigns };
 } 
