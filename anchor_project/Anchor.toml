@@ -1,0 +1,21 @@
+[workspace]
+members = ["programs/salina_hive"]
+
+[programs.localnet]
+salina_hive = "Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP"
+
+[programs.devnet]
+salina_hive = "Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "npx ts-mocha -p tsconfig.json -t 1000000 tests/**/*.ts"
+
+[test]
+startup_wait = 60000 

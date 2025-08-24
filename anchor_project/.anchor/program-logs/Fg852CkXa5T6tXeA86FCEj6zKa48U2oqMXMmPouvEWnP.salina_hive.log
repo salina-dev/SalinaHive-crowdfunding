@@ -1,0 +1,144 @@
+Streaming transaction logs mentioning Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP. Confirmed commitment
+Transaction executed in slot 8:
+  Signature: 21fDxT5ezPBk1DKkX3xUGgoATabBh1e5pRuSwuhawZSGGBRuxYQXAT2FT6maGGaGAseUmbRanB3wvQGhyfY7cvXL
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: InitializePlatform
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 6522 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 9:
+  Signature: 2UGzMYhYzJwF6pn6Ucp9TruLwWZ1pVtfpyMAbvEEvg4pL9thqY3TSeBzcuMLfC7QPEiCT7a1K1JvigWDTFMTs9Bw
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 12480 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 11:
+  Signature: 3vqAgUY6Th51JA8r6iBx1MBDZCz9ntBDHknNYqiQRHA2ooAibGMxf1NkJXimP7FswD96cTc49SwFJUGhcp7otAd
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 9877 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 13:
+  Signature: 1rRFeHEuhmpfkyA8cA2Qgtfnhu94e4mog8tdreHJkf4Nv2th4tP5i3D8CdAq9YLXEGGvXLUsJ8wq8Y8zZGE2ptB
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 9877 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 14:
+  Signature: 3riYwMCVTMtoZmvh8Zb6qKefqcEXUTqWwzj7CUHUnh2zB969MZ2tTjKdmaDDpoPNmYTqZrbdzn91zjJB8iKpaFXk
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: Withdraw
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 3777 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 14:
+  Signature: 9UHeZbZUMyqx8etvmf6AhoPTFFxCqgxDJu5ZL9Qjx7WXMRrUBwu4z96eEX5ZSTtgXiax8iPPG6qReiPydd1Y8jn
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: UpdateCampaign
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 4043 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 15:
+  Signature: 9UHeZbZUMyqx8etvmf6AhoPTFFxCqgxDJu5ZL9Qjx7WXMRrUBwu4z96eEX5ZSTtgXiax8iPPG6qReiPydd1Y8jn
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: UpdateCampaign
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 4043 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 16:
+  Signature: 9ZUWQJB5auxti8Wt2XMYqc47wooCYVhf6gcRioBgKXfShdotbxZcDTqNQ2wvJd4GoXVcdZAyshybgHoneMVmaxE
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: UpdatePlatformSettings
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 3072 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 18:
+  Signature: 3g1ofVarQnqCmGwS4uzvxeihuuHD7CJtNEhWvmy7T67oZyh6MXMSz8FzaGpp2QFyKkhofjfJHT9oX1PgA9RxD3JP
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 13504 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 19:
+  Signature: 464p2cjscUUaxwzm3uiuEysWi5cpXXAAiDu5UjT7NyKG8DVC68q6H3vDhEtMDgd9E6ZKXS1dY6Zqvj1vQ8YyzPDo
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 11976 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 19:
+  Signature: 4rgg6M4Y6JVkgQcpT5HHzJfTaRcU3uRWwYGs1vsTwMEUFvbxFLUPg944iHqrvmWeDZoscwrE8TgQ5kmeon4V7125
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: DeleteCampaign
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 1854 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 20:
+  Signature: 4rgg6M4Y6JVkgQcpT5HHzJfTaRcU3uRWwYGs1vsTwMEUFvbxFLUPg944iHqrvmWeDZoscwrE8TgQ5kmeon4V7125
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: DeleteCampaign
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 1854 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 21:
+  Signature: 5NzJiwg6J8DHk4GB28xTrZ3YJp4jwJQN5BieWv32wFRGZVokQ8gCyFDtSLbcBym4bJ3wqbm24nZ1DkHnp9DTK8CR
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: CreateCampaign
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 12004 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 23:
+  Signature: 9osKoiengsdeDTwhwnXdjSWHfTRmhCZAWvwahqiepyZN5DSo7Ku13xZDSaSqK8FXiZUwWnr7t8jzkv93SUZda8A
+  Status: Ok
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: Donate
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 9401 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP success
+Transaction executed in slot 23:
+  Signature: 2nCbCN9s9MXUSa3LFqM3AyZzwjXwZdynon7EzBnqw3bXNK4kU22wdiquBuguB7up2VSGpNSCGojrkFN1vZzcjcn7
+  Status: Error processing Instruction 0: custom program error: 0x1776
+  Log Messages:
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP invoke [1]
+    Program log: Instruction: DeleteCampaign
+    Program log: AnchorError thrown in src/instructions/delete_campaign.rs:15. Error Code: WithdrawNotAllowed. Error Number: 6006. Error Message: Goal not reached or deadline not passed.
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP consumed 3290 of 200000 compute units
+    Program Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP failed: custom program error: 0x1776
