@@ -131,10 +131,15 @@ export function useSalinaHive() {
     const ids: number[] = Array.from({ length: count }, (_, i) => i + 1);
     const pdas: PublicKey[] = ids.map((id) => findCampaignPdaById(id)[0]);
 
-    // Batch requests to reduce RPC load
+    // Batch requests to reduce RPC load - smaller chunks to avoid 429s
     const results: { pda: PublicKey; data: CampaignAccount }[] = [];
-    const CHUNK_SIZE = 50;
+    const CHUNK_SIZE = 10; // Reduced from 50 to minimize rate limit issues
     for (const batch of chunkArray(pdas, CHUNK_SIZE)) {
+      // Add a small delay between batches to be more rate-limit friendly
+      if (results.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      
       const infos = await provider.connection.getMultipleAccountsInfo(batch, { commitment: "confirmed" });
       for (let i = 0; i < batch.length; i++) {
         const info = infos[i];

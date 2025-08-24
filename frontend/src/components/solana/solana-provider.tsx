@@ -22,12 +22,13 @@ export const WalletButton = dynamic(async () => (await import('@solana/wallet-ad
 export function SolanaProvider({ children }: { children: ReactNode }) {
   const { cluster } = useCluster()
   const endpoint = useMemo(() => cluster.endpoint, [cluster])
+  
   const onError = useCallback((error: WalletError) => {
     console.error(error)
   }, [])
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
+    <ConnectionProvider endpoint={endpoint} config={{ commitment: 'confirmed' }}>
       <WalletProvider wallets={[]} onError={onError} autoConnect={false}>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
