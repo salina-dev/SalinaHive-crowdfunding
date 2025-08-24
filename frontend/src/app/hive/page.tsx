@@ -16,15 +16,24 @@ export default function HivePage() {
   useEffect(() => {
     let cancelled = false
     ;(async () => {
-      const p = await fetchPlatform()
-      if (cancelled) return
-      setPlatform(p)
-      if (p) {
-        const list = await fetchCampaigns()
+      try {
+        const p = await fetchPlatform()
         if (cancelled) return
-        setCampaigns(list.map(({ pda, data }) => ({ pda: pda.toBase58(), data })))
+        setPlatform(p)
+        if (p) {
+          const list = await fetchCampaigns()
+          if (cancelled) return
+          setCampaigns(list.map(({ pda, data }) => ({ pda: pda.toBase58(), data })))
+        }
+      } catch (err) {
+        console.error(err)
+        if (!cancelled) {
+          setPlatform(null)
+          setCampaigns([])
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-      setLoading(false)
     })()
     return () => {
       cancelled = true
