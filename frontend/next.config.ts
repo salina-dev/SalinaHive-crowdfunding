@@ -1,7 +1,35 @@
 import type { NextConfig } from 'next'
 
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src * data: blob:",
+  "connect-src 'self' https: wss:",
+  "font-src 'self' data:",
+  "frame-ancestors 'self'",
+].join('; ')
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: csp,
+          },
+        ],
+      },
+    ]
+  },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**' },
+      { protocol: 'http', hostname: '**' },
+    ],
+  },
 }
 
 export default nextConfig
