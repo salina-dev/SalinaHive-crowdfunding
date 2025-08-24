@@ -113,18 +113,42 @@ export function useSalinaHive() {
     }
   }
 
-  async function fetchCampaigns(): Promise<{ pda: PublicKey; data: CampaignAccount }[]> {
-    const platform = await fetchPlatform();
-    if (!platform) return [];
-    const items: { pda: PublicKey; data: CampaignAccount }[] = [];
-    for (let i = 1; i <= Number(platform.campaignCount); i++) {
-      const [pda] = findCampaignPdaById(i);
-      try {
-        const c = (await program.account.campaign.fetch(pda)) as unknown as CampaignAccount;
-        items.push({ pda, data: c });
-      } catch {}
+  function chunkArray<T>(items: T[], chunkSize: number): T[][] {
+    const chunks: T[][] = [];
+    for (let i = 0; i < items.length; i += chunkSize) {
+      chunks.push(items.slice(i, i + chunkSize));
     }
-    return items;
+    return chunks;
+  }
+
+  async function fetchCampaigns(existingPlatform?: PlatformAccount): Promise<{ pda: PublicKey; data: CampaignAccount }[]> {
+    const platform = existingPlatform ?? (await fetchPlatform());
+    if (!platform) return [];
+
+    const count = Number(platform.campaignCount);
+    if (count <= 0) return [];
+
+    const ids: number[] = Array.from({ length: count }, (_, i) => i + 1);
+    const pdas: PublicKey[] = ids.map((id) => findCampaignPdaById(id)[0]);
+
+    // Batch requests to reduce RPC load
+    const results: { pda: PublicKey; data: CampaignAccount }[] = [];
+    const CHUNK_SIZE = 50;
+    for (const batch of chunkArray(pdas, CHUNK_SIZE)) {
+      const infos = await provider.connection.getMultipleAccountsInfo(batch, { commitment: "confirmed" });
+      for (let i = 0; i < batch.length; i++) {
+        const info = infos[i];
+        if (!info?.data) continue;
+        try {
+          const decoded = program.coder.accounts.decode("campaign", info.data) as unknown as CampaignAccount;
+          results.push({ pda: batch[i], data: decoded });
+        } catch {
+          // Skip undecodable entries (e.g., missing or wrong account)
+        }
+      }
+    }
+
+    return results;
   }
 
   return { program, findPlatformPda, findCampaignPdaById, initializePlatform, createCampaign, donate, withdraw, fetchCampaign, fetchPlatform, fetchCampaigns };

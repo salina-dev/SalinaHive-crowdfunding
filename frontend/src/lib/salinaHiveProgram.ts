@@ -6,7 +6,10 @@ import type { SalinaHive } from "@/idl/salina_hive";
 export const SALINA_HIVE_PROGRAM_ID = new PublicKey("Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP");
 
 export function getConnection(): Connection {
-  const url = process.env.NEXT_PUBLIC_RPC_URL || "https://api.devnet.solana.com";
+  const url =
+    process.env.NEXT_PUBLIC_SOLANA_RPC ||
+    process.env.NEXT_PUBLIC_RPC_URL ||
+    "https://api.devnet.solana.com";
   return new Connection(url, "confirmed");
 }
 

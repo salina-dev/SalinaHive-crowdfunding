@@ -21,7 +21,7 @@ export default function HivePage() {
         if (cancelled) return
         setPlatform(p)
         if (p) {
-          const list = await fetchCampaigns()
+          const list = await fetchCampaigns(p)
           if (cancelled) return
           setCampaigns(list.map(({ pda, data }) => ({ pda: pda.toBase58(), data })))
         }
