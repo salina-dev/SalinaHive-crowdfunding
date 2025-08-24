@@ -18,7 +18,7 @@ pub struct InitializePlatform<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<InitializePlatform>, fee_bps: u16, _treasury_bump: u8) -> Result<()> {
+pub fn initialize_platform_handler(ctx: Context<InitializePlatform>, fee_bps: u16, _treasury_bump: u8) -> Result<()> {
     let platform = &mut ctx.accounts.platform;
     platform.authority = ctx.accounts.payer.key();
     platform.fee_bps = fee_bps;

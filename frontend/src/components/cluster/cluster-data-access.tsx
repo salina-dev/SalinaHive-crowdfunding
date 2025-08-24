@@ -3,7 +3,7 @@
 import { clusterApiUrl, Connection } from '@solana/web3.js'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { createContext, ReactNode, useContext, useEffect } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 
 export interface SolanaCluster {
   name: string
@@ -25,8 +25,7 @@ export enum ClusterNetwork {
 export const defaultClusters: SolanaCluster[] = [
   {
     name: 'devnet',
-    endpoint:
-      process.env.NEXT_PUBLIC_SOLANA_RPC || process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl('devnet'),
+    endpoint: clusterApiUrl('devnet'),
     network: ClusterNetwork.Devnet,
   },
   { name: 'local', endpoint: 'http://localhost:8899' },
@@ -72,22 +71,6 @@ export function ClusterProvider({ children }: { children: ReactNode }) {
   const clusters = useAtomValue(activeClustersAtom)
   const setCluster = useSetAtom(clusterAtom)
   const setClusters = useSetAtom(clustersAtom)
-
-  // Migrate stored devnet endpoint to env-provided RPC if present
-  useEffect(() => {
-    const envRpc = process.env.NEXT_PUBLIC_SOLANA_RPC || process.env.NEXT_PUBLIC_RPC_URL
-    if (!envRpc) return
-    // If the active cluster is devnet but endpoint differs, override it
-    if (cluster.network === ClusterNetwork.Devnet && cluster.endpoint !== envRpc) {
-      const updatedCluster: SolanaCluster = { ...cluster, endpoint: envRpc }
-      setCluster(updatedCluster)
-      const updatedClusters = clusters.map((c) =>
-        c.name === 'devnet' ? { ...c, endpoint: envRpc } : c
-      )
-      setClusters(updatedClusters)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [/* run once on mount */])
 
   const value: ClusterProviderContext = {
     cluster,

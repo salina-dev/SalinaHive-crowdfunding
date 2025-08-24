@@ -3,42 +3,27 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { WalletButton } from '@/components/solana/solana-provider'
-import { useSalinaHive, type PlatformAccount, type CampaignAccount } from '@/lib/actions'
+import { useSalinaHive } from '@/lib/actions'
 import { ellipsify } from '@/lib/utils'
 
 export default function HivePage() {
   const { fetchPlatform, fetchCampaigns, initializePlatform } = useSalinaHive()
   const [loading, setLoading] = useState(true)
-  const [platform, setPlatform] = useState<PlatformAccount | null>(null)
-  const [campaigns, setCampaigns] = useState<{ pda: string; data: CampaignAccount }[]>([])
+  const [platform, setPlatform] = useState<any | null>(null)
+  const [campaigns, setCampaigns] = useState<any[]>([])
   const [initBusy, setInitBusy] = useState(false)
 
   useEffect(() => {
-    let cancelled = false
     ;(async () => {
-      try {
-        const p = await fetchPlatform()
-        if (cancelled) return
-        setPlatform(p)
-        if (p) {
-          const list = await fetchCampaigns(p)
-          if (cancelled) return
-          setCampaigns(list.map(({ pda, data }) => ({ pda: pda.toBase58(), data })))
-        }
-      } catch (err) {
-        console.error(err)
-        if (!cancelled) {
-          setPlatform(null)
-          setCampaigns([])
-        }
-      } finally {
-        if (!cancelled) setLoading(false)
+      const p = await fetchPlatform()
+      setPlatform(p)
+      if (p) {
+        const list = await fetchCampaigns()
+        setCampaigns(list)
       }
+      setLoading(false)
     })()
-    return () => {
-      cancelled = true
-    }
-  }, [fetchPlatform, fetchCampaigns])
+  }, [])
 
   async function onInit() {
     setInitBusy(true)
@@ -77,10 +62,10 @@ export default function HivePage() {
           <ul className="divide-y border rounded">
             {campaigns.length === 0 && <li className="p-4 text-sm">No campaigns yet.</li>}
             {campaigns.map(({ pda, data }) => (
-              <li key={pda} className="p-4 flex items-center justify-between">
+              <li key={pda.toBase58()} className="p-4 flex items-center justify-between">
                 <div>
                   <div className="font-medium">{data.title}</div>
-                  <div className="text-xs text-muted-foreground">{ellipsify(pda, 6)}</div>
+                  <div className="text-xs text-muted-foreground">{ellipsify(pda.toBase58(), 6)}</div>
                 </div>
                 <Link href={`/hive/${data.cid}`} className="text-blue-600 underline">Open</Link>
               </li>

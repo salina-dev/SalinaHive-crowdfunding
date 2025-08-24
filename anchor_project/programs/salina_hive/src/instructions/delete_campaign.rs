@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::errors::SalinaError;
+use crate::errors::ErrorCode;
 use crate::state::Campaign;
 
 #[derive(Accounts)]
@@ -10,9 +10,9 @@ pub struct DeleteCampaign<'info> {
     pub campaign: Account<'info, Campaign>,
 }
 
-pub fn handler(ctx: Context<DeleteCampaign>) -> Result<()> {
+pub fn delete_campaign_handler(ctx: Context<DeleteCampaign>) -> Result<()> {
     let campaign = &mut ctx.accounts.campaign;
-    require!(campaign.raised_lamports == 0, SalinaError::WithdrawNotAllowed);
+    require!(campaign.raised_lamports == 0, ErrorCode::WithdrawNotAllowed);
     campaign.is_deleted = true;
     Ok(())
 } 

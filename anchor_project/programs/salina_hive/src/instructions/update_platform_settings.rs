@@ -8,7 +8,7 @@ pub struct UpdatePlatformSettings<'info> {
     pub platform: Account<'info, Platform>,
 }
 
-pub fn handler(ctx: Context<UpdatePlatformSettings>, fee_bps: u16) -> Result<()> {
+pub fn update_platform_settings_handler(ctx: Context<UpdatePlatformSettings>, fee_bps: u16) -> Result<()> {
     let platform = &mut ctx.accounts.platform;
     platform.fee_bps = fee_bps;
     Ok(())

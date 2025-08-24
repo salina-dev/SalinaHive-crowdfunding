@@ -308,4 +308,85 @@ describe("salina_hive", () => {
         .rpc()
     );
   });
+
+  it("Initialize platform (unhappy: already initialized)", async () => {
+    const [platformPda] = await findPlatformPda();
+
+    await assert.rejects(
+      program.methods
+        .initializePlatform(250, 0)
+        .accounts({
+          payer: provider.wallet.publicKey,
+          platform: platformPda,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc()
+    );
+  });
+
+  it("Update platform settings (unhappy: unauthorized)", async () => {
+    const [platformPda] = await findPlatformPda();
+    const notAuthority = Keypair.generate();
+    await provider.connection.confirmTransaction(
+      await provider.connection.requestAirdrop(notAuthority.publicKey, 1 * LAMPORTS_PER_SOL),
+      "confirmed"
+    );
+
+    await assert.rejects(
+      program.methods
+        .updatePlatformSettings(500)
+        .accounts({
+          authority: notAuthority.publicKey,
+          platform: platformPda,
+        })
+        .signers([notAuthority])
+        .rpc()
+    );
+  });
+
+  it("Update campaign (unhappy: unauthorized)", async () => {
+    const stranger = Keypair.generate();
+    await provider.connection.confirmTransaction(
+      await provider.connection.requestAirdrop(stranger.publicKey, 1 * LAMPORTS_PER_SOL),
+      "confirmed"
+    );
+
+    await assert.rejects(
+      program.methods
+        .updateCampaign("X", "Y", "Z")
+        .accounts({
+          creator: stranger.publicKey,
+          campaign: campaignPda1,
+        })
+        .signers([stranger])
+        .rpc()
+    );
+  });
+
+  it("Create campaign (unhappy: deadline in past)", async () => {
+    const [platformPda] = await findPlatformPda();
+    const platform = await program.account.platform.fetch(platformPda);
+    const nextId = Number(platform.campaignCount) + 1;
+    const [campaignPda] = findCampaignPdaById(nextId);
+
+    const now = Math.floor(Date.now() / 1000);
+
+    await assert.rejects(
+      program.methods
+        .createCampaign(
+          "PastDeadline",
+          "",
+          new anchor.BN(1),
+          new anchor.BN(1),
+          ""
+        )
+        .accounts({
+          payer: provider.wallet.publicKey,
+          platform: platformPda,
+          campaign: campaignPda,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc()
+    );
+  });
 }); 

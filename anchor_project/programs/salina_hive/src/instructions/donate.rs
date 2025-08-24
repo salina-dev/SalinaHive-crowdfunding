@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program::{transfer, Transfer};
-use crate::errors::SalinaError;
+use crate::errors::ErrorCode;
 use crate::state::{Campaign, Platform};
 
 #[derive(Accounts)]
@@ -21,8 +21,8 @@ pub struct Donate<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<Donate>, amount: u64) -> Result<()> {
-    require!(amount > 0, SalinaError::InvalidAmount);
+pub fn donate_handler(ctx: Context<Donate>, amount: u64) -> Result<()> {
+    require!(amount > 0, ErrorCode::InvalidAmount);
 
     let platform = &ctx.accounts.platform;
     let campaign = &mut ctx.accounts.campaign;

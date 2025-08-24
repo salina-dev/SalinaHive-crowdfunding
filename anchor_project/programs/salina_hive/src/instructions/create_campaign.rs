@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::errors::SalinaError;
+use crate::errors::ErrorCode;
 use crate::state::{Campaign, Platform};
 use crate::constants::{TITLE_MAX_LEN, DESC_MAX_LEN, URL_MAX_LEN};
 
@@ -23,7 +23,7 @@ pub struct CreateCampaign<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(
+pub fn create_campaign_handler(
     ctx: Context<CreateCampaign>,
     title: String,
     description: String,
@@ -31,13 +31,13 @@ pub fn handler(
     deadline_ts: i64,
     image_url: String,
 ) -> Result<()> {
-    require!(title.as_bytes().len() <= TITLE_MAX_LEN, SalinaError::TitleTooLong);
-    require!(description.as_bytes().len() <= DESC_MAX_LEN, SalinaError::DescriptionTooLong);
-    require!(image_url.as_bytes().len() <= URL_MAX_LEN, SalinaError::UrlTooLong);
-    require!(goal_lamports > 0, SalinaError::InvalidAmount);
+    require!(title.as_bytes().len() <= TITLE_MAX_LEN, ErrorCode::TitleTooLong);
+    require!(description.as_bytes().len() <= DESC_MAX_LEN, ErrorCode::DescriptionTooLong);
+    require!(image_url.as_bytes().len() <= URL_MAX_LEN, ErrorCode::UrlTooLong);
+    require!(goal_lamports > 0, ErrorCode::InvalidAmount);
 
     let now = Clock::get()?.unix_timestamp;
-    require!(deadline_ts > now, SalinaError::DeadlineInPast);
+    require!(deadline_ts > now, ErrorCode::DeadlineInPast);
 
     let next_id = ctx.accounts.platform.campaign_count.checked_add(1).unwrap();
 
