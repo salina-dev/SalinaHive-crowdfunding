@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useSalinaHive } from '@/lib/actions'
+import { useSalinaHive, type CampaignAccount } from '@/lib/actions'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 
 export default function HiveDetailPage() {
   const params = useParams<{ cid: string }>()
   const cid = Number(params.cid)
   const { findCampaignPdaById, fetchCampaign, donate, withdraw } = useSalinaHive()
-  const [campaign, setCampaign] = useState<any | null>(null)
+  const [campaign, setCampaign] = useState<{ pda: PublicKey; data: CampaignAccount } | null>(null)
   const [amount, setAmount] = useState(0) // in SOL
   const [busy, setBusy] = useState(false)
   const router = useRouter()
@@ -24,6 +24,8 @@ export default function HiveDetailPage() {
         setCampaign(null)
       }
     })()
+    // findCampaignPdaById and fetchCampaign are stable from hook; ignoring exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cid])
 
   async function onDonate(e: React.FormEvent) {
@@ -31,7 +33,7 @@ export default function HiveDetailPage() {
     if (!campaign) return
     setBusy(true)
     try {
-      await donate(campaign.pda as PublicKey, Math.round(amount * LAMPORTS_PER_SOL))
+      await donate(campaign.pda, Math.round(amount * LAMPORTS_PER_SOL))
       const data = await fetchCampaign(campaign.pda)
       setCampaign({ ...campaign, data })
     } finally {
@@ -43,7 +45,7 @@ export default function HiveDetailPage() {
     if (!campaign) return
     setBusy(true)
     try {
-      await withdraw(campaign.pda as PublicKey)
+      await withdraw(campaign.pda)
       router.push('/hive')
     } finally {
       setBusy(false)
