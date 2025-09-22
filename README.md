@@ -1,93 +1,47 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/idxPpgnz)
-![School of Solana](https://github.com/Ackee-Blockchain/school-of-solana/blob/master/.banner/banner.png?raw=true)
+## 🎓 Graduation Project — School of Solana Season 7
 
-## 📚Solana Program
-We are about halfway through the course, and you already have some experience with programming on Solana. It is time to create something on your own! You will be building a dApp that will serve as the culmination of everything you have learned so far. Feel free to implement whatever comes to your mind, (as long as it passes the requirements).
+I’m excited to share that I’ve officially graduated from School of Solana – Season 7! 🚀 This program was a transformative journey where I deepened my Solana development skills, built real-world dApps, and collaborated with an amazing community of builders.
 
-**This does not mean that the School of Solana is coming to an end just yet!** There are still several exciting lectures ahead, as well as one security related task.
+### 🌐 SalinaHive — Crowdfunding on Solana
 
-### Task details
-This task consists of two parts:
-1. **Core of your dApp**
-    - A deployed Solana program.
-2. **Frontend**
-    - A simple frontend to interact with the dApp.
+SalinaHive is a non-custodial crowdfunding dApp on Solana. Creators can launch campaigns with a funding goal and deadline; supporters donate SOL trustlessly; and funds can be withdrawn by the campaign owner under defined conditions. The stack combines an Anchor program with a modern Next.js frontend.
 
-### Requirements
-- An Anchor program deployed on **Devnet** or **Mainnet**.
-- The Anchor program must use a PDA (Program Derived Address).
-- At least one TypeScript **test** for each Anchor program instruction. These tests should cover both **happy** and **unhappy** (intentional error-triggering) scenarios.
-- A simple **frontend** deployed using your preferred provider (for more info, check below).
-- A filled out **PROJECT_DESCRIPTION.md** file.
+### 🌟 Highlights from the Program
 
-### Ideas
-We highly recommend starting with something simple. Take time to think through your project and work on it in iterations. Do not try to implement everything at once!
+- **Advanced Solana dev**: Anchor, PDAs, CPI, SPL tokens
+- **Hands-on builds**: real dApps, assignments, and cohort challenges
+- **Production focus**: deployable programs and practical UX
+- **Community**: learning, code reviews, and knowledge sharing
 
-Below is a list of few ideas to get you started:
-- **Social app**
-    - Instagram
-    - Giphy
-    - Friendtech
-    - Spotify
-- **Blog**
-- **Voting** ([D21 - Janeček method](https://www.ih21.org/en/guidelines))
-- **DeFi**
-    - Crowdfunding
-    - Raffles
-    - Escrow
-    - Tipping
-    - Lending ([Save Documentation](https://docs.save.finance/))
-    - Liquid Staking ([Marinade Documentation](https://docs.marinade.finance/))
-    - Data Query with Pyth ([Pyth Documentation](https://docs.pyth.network/price-feeds))
-    - AMM ([Raydium Documentation](https://raydium.gitbook.io/raydium/))
-- **Gaming**
-    - Browser Game ([Gaming on Solana](https://solanacookbook.com/gaming/nfts-in-games.html#nfts-in-games))
+### 🧩 Key Features (SalinaHive)
 
-### Deadline
-The deadline for this task is **Wednesday, August 27th, at 23:59 UTC**.
->[!CAUTION]
->Note that we will not accept submissions after the deadline.
+- **Create campaigns**: title, description, image, goal (lamports), deadline
+- **Donate SOL**: on-chain receipts for each donation
+- **Withdrawals**: campaign owner withdrawal logic after conditions are met
+- **Update/Delete**: maintain or remove campaigns as needed
+- **Platform settings**: initialize and update global platform config
 
-### Submission
-There are two folders, one for the Anchor project, and one for the frontend. Push your changes to the **main** branch of **this** repository.
+### 🛠️ Tech Stack
 
->[!IMPORTANT]
->It is essential that you fill out the `PROJECT_DESCRIPTION.md` template completely and accurately. This document will be used by AI for the initial evaluation, so provide detailed information about your project, including working links, clear descriptions, and technical implementation details.
+- **On-chain**: Rust, Anchor (PDAs, robust validation, custom errors)
+- **Frontend**: Next.js + React + TypeScript, TailwindCSS
+- **Client utils**: Anchor-generated IDL/types, Solana Web3 tooling
 
-### Evaluation
-The evaluation process is based on the **requirements**. If you meet the requirements, you pass the task!
+### 🔑 On-chain Program
 
->[!NOTE]
->We have a record number of participants this season, so the first round of evaluations will be conducted by AI to verify requirements before manual review. AI can make mistakes. If you believe you fulfilled all requirements but weren't graded correctly, please create a support ticket and we will resolve the issue.
+- **Program ID**: `Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP`
+- **IDL**: `frontend/src/idl/salina_hive.json`
+- **Generated types**: `frontend/src/idl/salina_hive.ts`
 
->[!CAUTION]
->We expect original work that demonstrates your understanding and creativity. While you may draw inspiration from examples covered in lessons and tasks, **direct copying is not acceptable**. If you choose to build upon an example from the School of Solana materials, you must significantly expand it with additional features, instructions, and functionality to showcase your learning progress. 
+### 📁 Repo Layout
 
-### Example Workflow
-Let's say you are going to implement the Twitter dApp as the Solana Program. Here's how the steps could look:
+- `anchor_project/`: Anchor workspace — program, tests, and config
+- `frontend/`: Next.js app — pages, components, providers, and client actions
 
-**1.** Implement Twitter dApp using the Anchor framework.
+### 🙌 Acknowledgments
 
-**2.** Test the Twitter dApp using the Anchor framework.
+Huge thanks to Ackee Blockchain and the School of Solana mentors & community for the guidance, support, and opportunity to grow as a Solana developer.
 
-**3.** Deploy the Twitter dApp on the Solana Devnet.
+### 📚 About the Course
 
-**4.** Using the create solana dapp template, implement frontend for the Twitter dApp.
-
-**5.** Publish Frontend using [Vercel](https://vercel.com).
-
-**6.** Fill out the PROJECT_DESCRIPTION.md template.
-
-**7.** Submit the Twitter dApp using GitHub Classroom.
-
-### Useful Links
-- [Vercel](https://vercel.com)
-- [Create Solana Dapp](https://github.com/solana-foundation/create-solana-dapp)
-- [Account Macro Constraints](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html#constraints)
-- [Solana Developers Courses](https://solana.com/developers/courses)
-
------
-
-### Need help?
->[!TIP]
->If you have any questions, feel free to reach out to us on [Discord](https://discord.gg/z3JVuZyFnp).
+A 9‑week online program by Ackee Blockchain Security to learn Rust and build secure Solana programs. Includes fundamentals (PoH, Sealevel), Anchor, best practices and debugging, front-end integration, security, Token‑2022, and more—culminating in a certified, fully functional program.
