@@ -1,6 +1,7 @@
 import { AnchorProvider, BN, Program, Idl } from "@coral-xyz/anchor";
 import { Connection, PublicKey } from "@solana/web3.js";
 import idl from "@/idl/salina_hive.json";
+import type { SalinaHive } from "@/idl/salina_hive";
 
 export const SALINA_HIVE_PROGRAM_ID = new PublicKey("Fg852CkXa5T6tXeA86FCEj6zKa48U2oqMXMmPouvEWnP");
 
@@ -11,13 +12,13 @@ export function getConnection(): Connection {
 
 export function getProvider(): AnchorProvider {
   const connection = getConnection();
-  const provider = new AnchorProvider(connection, (window as any).solana, { commitment: "confirmed" });
-  return provider;
+  const wallet = (globalThis as unknown as { solana?: unknown }).solana as AnchorProvider["wallet"];
+  return new AnchorProvider(connection, wallet, { commitment: "confirmed" });
 }
 
-export function getProgram(): Program<Idl> {
+export function getProgram(): Program<SalinaHive> {
   const provider = getProvider();
-  return (Program as any).at(SALINA_HIVE_PROGRAM_ID, provider, idl as Idl) as Program<Idl>;
+  return new Program(idl as Idl, provider) as Program<SalinaHive>;
 }
 
 export type { BN }; 

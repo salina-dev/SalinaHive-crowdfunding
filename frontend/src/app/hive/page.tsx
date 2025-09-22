@@ -3,14 +3,14 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { WalletButton } from '@/components/solana/solana-provider'
-import { useSalinaHive } from '@/lib/actions'
+import { useSalinaHive, type PlatformAccount, type CampaignAccount } from '@/lib/actions'
 import { ellipsify } from '@/lib/utils'
-
-export default function HivePage() {
+import { PublicKey } from '@solana/web3.js'
+	export default function HivePage() {
   const { fetchPlatform, fetchCampaigns, initializePlatform } = useSalinaHive()
   const [loading, setLoading] = useState(true)
-  const [platform, setPlatform] = useState<any | null>(null)
-  const [campaigns, setCampaigns] = useState<any[]>([])
+  const [platform, setPlatform] = useState<PlatformAccount | null>(null)
+  const [campaigns, setCampaigns] = useState<{ pda: PublicKey; data: CampaignAccount }[]>([])
   const [initBusy, setInitBusy] = useState(false)
 
   useEffect(() => {
@@ -23,6 +23,8 @@ export default function HivePage() {
       }
       setLoading(false)
     })()
+    // fetchPlatform and fetchCampaigns are stable from hook; ignoring exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function onInit() {
